@@ -2,7 +2,7 @@
 using PromotionEngine.Interfaces;
 using System.Collections.Generic;
 
-namespace PromotionEngine.Models
+namespace PromotionEngine.Models.EntityModels
 {
     /// <summary>
     /// The Promotion entity model.

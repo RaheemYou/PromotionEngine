@@ -1,6 +1,6 @@
 ﻿using PromotionEngine.Interfaces;
 
-namespace PromotionEngine.Models
+namespace PromotionEngine.Models.EntityModels
 {
     /// <summary>
     /// The PromotionItem entity model.
@@ -10,7 +10,7 @@ namespace PromotionEngine.Models
         /// <summary>
         /// Gets or sets the Item for the Promotion.
         /// </summary>
-        public string Item { get; set; }
+        public string SKU { get; set; }
 
         /// <summary>
         /// Gets or sets the Item Quantity for the Promotion. 

@@ -1,5 +1,5 @@
 ﻿using PromotionEngine.Enum;
-using PromotionEngine.Models;
+using PromotionEngine.Models.EntityModels;
 using System.Collections.Generic;
 
 namespace PromotionEngine.Interfaces

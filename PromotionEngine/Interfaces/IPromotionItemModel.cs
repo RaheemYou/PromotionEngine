@@ -1,6 +1,6 @@
 ﻿namespace PromotionEngine.Interfaces
 {
-    public interface IPromotionItem
+    public interface IPromotionItemModel
     {
         string SKU { get; set; }
         int Quantity { get; set; }

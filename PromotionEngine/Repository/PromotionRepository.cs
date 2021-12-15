@@ -1,6 +1,7 @@
-﻿using PromotionEngine.Enum;
+﻿using Microsoft.Extensions.Logging;
+using PromotionEngine.Enum;
 using PromotionEngine.Interfaces;
-using PromotionEngine.Models;
+using PromotionEngine.Models.EntityModels;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -11,6 +12,17 @@ namespace PromotionEngine.Repository
     /// </summary>
     public class PromotionRepository : IPromotionRepository
     {
+        private ILogger<IPromotionRepository> logger { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the PromotionRepository class.
+        /// </summary>
+        /// <param name="logger"></param>
+        public PromotionRepository(ILogger<IPromotionRepository> logger)
+        {
+            this.logger = logger;
+        }
+
         /// <summary>
         /// Gets a collection of active promotions filtered by type.
         /// </summary>
@@ -18,6 +30,8 @@ namespace PromotionEngine.Repository
         /// <returns>A collection of promotions.</returns>
         public IEnumerable<Promotion> GetActiveByPromotionType(PromotionType promotionType)
         {
+            this.logger.LogInformation("Getting Active Promotions by Type in the repo.");
+
             // This will not resolve until we do a ToList on it.
             return this.Promotions().Where(x => x.Active && x.PromotionType == promotionType);
         }
@@ -37,7 +51,7 @@ namespace PromotionEngine.Repository
                     {
                         new PromotionItem()
                         {
-                            Item = "A",
+                            SKU = "A",
                             Quantity = 3,
                         }
                     },
@@ -51,7 +65,7 @@ namespace PromotionEngine.Repository
                     {
                         new PromotionItem()
                         {
-                            Item = "B",
+                            SKU = "B",
                             Quantity = 2,
                         }
                     },
@@ -65,12 +79,12 @@ namespace PromotionEngine.Repository
                     {
                         new PromotionItem()
                         {
-                            Item = "C",
+                            SKU = "C",
                             Quantity = 1,
                         },
                          new PromotionItem()
                         {
-                            Item = "D",
+                            SKU = "D",
                             Quantity = 1,
                         }
                     },
