@@ -28,7 +28,7 @@ namespace PromotionEngine.Repository
         /// </summary>
         /// <param name="promotionType">The promotionType.</param>
         /// <returns>A collection of promotions.</returns>
-        public IEnumerable<Promotion> GetActiveByPromotionType(PromotionType promotionType)
+        public IEnumerable<IPromotion> GetActiveByPromotionType(PromotionType promotionType)
         {
             this.logger.LogInformation("Getting Active Promotions by Type in the repo.");
 

@@ -11,13 +11,11 @@ namespace PromotionEngine.Services
 {
     public class CartService : BusinessServiceBase<ICartService>, ICartService
     {
-        private IPromotionService promotionService { get; set; }
-        private IPromotionStrategy promotionStrategy { get; set; }
+        private IPromotionStrategyService promotionStrategyService { get; set; }
 
-        public CartService(IPromotionService promotionService, IPromotionStrategy promotionStrategy, ILogger<ICartService> logger) : base(logger)
+        public CartService(IPromotionStrategyService promotionStrategyService, ILogger<ICartService> logger) : base(logger)
         {
-            this.promotionService = promotionService;
-            this.promotionStrategy = promotionStrategy;
+            this.promotionStrategyService = promotionStrategyService;
         }
 
         /// <summary>
@@ -37,9 +35,8 @@ namespace PromotionEngine.Services
                 throw new ValidationException(validationResult.Errors);
             }
 
-            List<IPromotionModel> promotions = this.promotionService.GetActivePromotions(this.promotionStrategy.PromotionType);
+            cartModel.CartItems = this.promotionStrategyService.ApplyPromotionStrategies(cartModel.CartItems);
 
-            cartModel.CartItems = this.promotionStrategy.ApplyPromotions(cartModel.CartItems, promotions);
             cartModel.TotalPrice = cartModel.CartItems.Sum(x => x.TotalPrice);
 
             return cartModel;

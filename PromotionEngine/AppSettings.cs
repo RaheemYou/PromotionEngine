@@ -9,12 +9,12 @@ namespace PromotionEngine
     {
         public AppSettings(IConfiguration configuration)
         {
-            this.PromotionType = configuration.GetSection("PromotionType").Value;
+            this.AllowedPromotionType = configuration.GetSection("AllowedPromotionType").Value;
         }
 
         /// <summary>
         /// Gets the PromotionType for the application.
         /// </summary>
-        public string PromotionType { get; private set; }
+        public string AllowedPromotionType { get; private set; }
     }
 }

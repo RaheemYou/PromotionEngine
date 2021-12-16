@@ -16,6 +16,7 @@ namespace PromotionEngine.Tests.Repository
     public class PromotionRepositoryTests : TestBase
     {
         private Mock<ILogger<IPromotionRepository>> mockLogger {get; set;}
+        public IPromotionRepository PromotionRepository { get; set; }
 
         public PromotionRepositoryTests()
         {
@@ -27,7 +28,7 @@ namespace PromotionEngine.Tests.Repository
         [TestMethod]
         public void GetActiveByPromotionType_SingleItem()
         {
-            List<Promotion> promotions = this.PromotionRepository.GetActiveByPromotionType(PromotionType.SingleItem).ToList();
+            List<IPromotion> promotions = this.PromotionRepository.GetActiveByPromotionType(PromotionType.SingleItem).ToList();
 
             // Verify the log message.
             this.mockLogger.Verify(x => x.Log(
@@ -43,7 +44,7 @@ namespace PromotionEngine.Tests.Repository
         [TestMethod]
         public void GetActiveByPromotionType_MultipleItems()
         {
-            List<Promotion> promotions = this.PromotionRepository.GetActiveByPromotionType(PromotionType.MultipleItems).ToList();
+            List<IPromotion> promotions = this.PromotionRepository.GetActiveByPromotionType(PromotionType.MultipleItems).ToList();
 
             // Verify the log message.
             this.mockLogger.Verify(x => x.Log(
