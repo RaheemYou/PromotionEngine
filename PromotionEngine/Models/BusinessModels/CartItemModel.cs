@@ -15,7 +15,7 @@ namespace PromotionEngine.Models.BusinessModels
         /// <summary>
         /// Gets or sets the Price.
         /// </summary>
-        public decimal Price { get; set; }
+        public decimal UnitPrice { get; set; }
 
         /// <summary>
         /// Gets or sets the Quantity.

@@ -149,7 +149,7 @@ namespace PromotionEngine.Services.PromotionStrategies
         {
             int promotionItemQuantity = promotion.PromotionItems.First(x => x.SKU == cartItem.SKU).Quantity;
 
-            cartItem.TotalPrice =  cartItem.Price * (cartItem.Quantity - promotionItemQuantity);
+            cartItem.TotalPrice =  cartItem.UnitPrice * (cartItem.Quantity - promotionItemQuantity);
 
             if (applyPromotionPrice)
             {

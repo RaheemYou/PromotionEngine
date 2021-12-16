@@ -125,7 +125,10 @@ namespace PromotionEngine.Services.PromotionStrategies
         /// <returns>The updated cart item.</returns>
         private ICartItemModel ApplyToCartItem(ICartItemModel cartItem, IPromotionModel promotion, IPromotionItemModel promotionItem)
         {
-            cartItem.TotalPrice = promotion.PromotionPrice + (cartItem.Price * (cartItem.Quantity - promotionItem.Quantity));
+            int remainder =  cartItem.Quantity % promotionItem.Quantity;
+            int lotsOfPromotions = cartItem.Quantity / promotionItem.Quantity;
+
+            cartItem.TotalPrice = (promotion.PromotionPrice * lotsOfPromotions) + (cartItem.UnitPrice * remainder);
             cartItem.PromotionApplied = true;
 
             return cartItem;

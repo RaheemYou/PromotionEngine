@@ -369,7 +369,7 @@ namespace PromotionEngine.Tests.PromotionStrategyTests
             cartItems.Add(new CartItemModel()
             {
                 SKU = "A",
-                Price = 100,
+                UnitPrice = 100,
                 PromotionApplied = false,
                 Quantity = 1,
                 TotalPrice = 100,
@@ -378,7 +378,7 @@ namespace PromotionEngine.Tests.PromotionStrategyTests
             cartItems.Add(new CartItemModel()
             {
                 SKU = "B",
-                Price = 100,
+                UnitPrice = 100,
                 PromotionApplied = false,
                 Quantity = 1,
                 TotalPrice = 120,
@@ -440,7 +440,7 @@ namespace PromotionEngine.Tests.PromotionStrategyTests
                 new CartItemModel()
                 {
                     SKU = "C",
-                    Price = 20,
+                    UnitPrice = 20,
                     PromotionApplied = false,
                     Quantity = 1,
                     TotalPrice = 20,
@@ -448,7 +448,7 @@ namespace PromotionEngine.Tests.PromotionStrategyTests
                 new CartItemModel()
                 {
                     SKU = "D",
-                    Price = 15,
+                    UnitPrice = 15,
                     PromotionApplied = false,
                     Quantity = 1,
                     TotalPrice = 15,
