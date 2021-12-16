@@ -115,7 +115,7 @@ namespace PromotionEngine.PromotionStrategies
                 throw new ArgumentNullException("promotion");
             }
 
-            if (cartItems.Any() && promotion.Active && promotion.PromotionItems.Any())
+            if (cartItems.Any() && promotion.Active && promotion.PromotionItems.Any() && promotion.PromotionType == PromotionType.MultipleItems)
             {
                 List<string> promotionItems = promotion.PromotionItems.Select(x => x.SKU).ToList();
 

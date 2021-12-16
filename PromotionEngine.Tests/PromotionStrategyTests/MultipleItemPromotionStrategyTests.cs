@@ -107,26 +107,66 @@ namespace PromotionEngine.Tests.PromotionStrategyTests
         }
 
         [TestMethod]
-        public void CanApplyPromotion_True()
+        public void CanApplyPromotion_False_SingleItemPromotion()
         {
-            IPromotion promotion = new Promotion();
-            promotion.Active = true;
-            promotion.PromotionItems = new List<IPromotionItem>()
+            IPromotion promotion = new Promotion()
             {
-                new PromotionItem()
+                Active = true,
+                PromotionItems = new List<IPromotionItem>()
                 {
-                    SKU = "A",
-                    Quantity = 1,
+                    new PromotionItem()
+                    {
+                        SKU = "A",
+                        Quantity = 1,
+                    },
                 },
-                new PromotionItem()
-                {
-                    SKU = "B",
-                    Quantity = 1,
-                },
+                PromotionType = Enum.PromotionType.SingleItem,
             };
 
-            promotion.Active = true;
+            List<ICartItemModel> cartItems = new List<ICartItemModel>()
+            {
+                new CartItemModel()
+                {
+                    SKU = "A",
+                    Price = 100,
+                    PromotionApplied = false,
+                    Quantity = 1,
+                    TotalPrice = 100,
+                },
+                new CartItemModel()
+                {
+                    SKU = "B",
+                    Price = 100,
+                    PromotionApplied = false,
+                    Quantity = 1,
+                    TotalPrice = 100,
+                }
+            };
 
+            Assert.IsFalse(this.multipleItemPromotionStrategy.CanApplyPromotion(cartItems, new PromotionModel(promotion)));
+        }
+
+        [TestMethod]
+        public void CanApplyPromotion_True()
+        {
+            IPromotion promotion = new Promotion()
+            {
+                Active = true,
+                PromotionItems = new List<IPromotionItem>()
+                {
+                    new PromotionItem()
+                    {
+                        SKU = "A",
+                        Quantity = 1,
+                    },
+                    new PromotionItem()
+                    {
+                        SKU = "B",
+                        Quantity = 1,
+                    },
+                },
+                PromotionType = Enum.PromotionType.MultipleItems,
+            };
 
             List<ICartItemModel> cartItems = new List<ICartItemModel>()
             {
