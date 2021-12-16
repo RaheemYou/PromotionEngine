@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using PromotionEngine.Interfaces;
 using PromotionEngine.Repository;
 using PromotionEngine.Services;
 using PromotionEngine.Services.PromotionStrategies;
@@ -23,19 +24,19 @@ namespace PromotionEngine
         {
             services.AddControllers();
 
-            services.AddSingleton<AppSettings>();
+            services.AddSingleton<IAppSettings, AppSettings>();
 
             // Services
-            services.AddScoped<CartService>();
-            services.AddScoped<PromotionService>();
-            services.AddScoped<PromotionStrategyService>();
+            services.AddScoped<ICartService, CartService>();
+            services.AddScoped<IPromotionService, PromotionService>();
+            services.AddScoped<IPromotionStrategyService, PromotionStrategyService>();
 
             // Promotion Strategies
             services.AddScoped<SingleItemPromotionStrategy>();
             services.AddScoped<MultipleItemPromotionStrategy>();
 
             // Repositories
-            services.AddScoped<PromotionRepository>();
+            services.AddScoped<IPromotionRepository, PromotionRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

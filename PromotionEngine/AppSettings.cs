@@ -1,11 +1,12 @@
 ﻿using Microsoft.Extensions.Configuration;
+using PromotionEngine.Interfaces;
 
 namespace PromotionEngine
 {
     /// <summary>
     /// The AppSettings class.
     /// </summary>
-    public class AppSettings
+    public class AppSettings : IAppSettings
     {
         public AppSettings(IConfiguration configuration)
         {
