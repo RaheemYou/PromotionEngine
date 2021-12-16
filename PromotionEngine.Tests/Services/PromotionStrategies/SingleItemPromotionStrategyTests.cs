@@ -44,7 +44,7 @@ namespace PromotionEngine.Tests.PromotionStrategyTests
         {
             try
             {
-                this.SingleItemPromotionStrategy.CanApplyPromotion(new List<ICartItemModel>(), null);
+                this.SingleItemPromotionStrategy.CanApplyPromotion(new List<CartItemModel>(), null);
             }
             catch (ArgumentNullException ex)
             {
@@ -59,7 +59,7 @@ namespace PromotionEngine.Tests.PromotionStrategyTests
             promotion.PromotionItems = new List<IPromotionItemModel>();
 
 
-            List<ICartItemModel> cartItems = this.ValidCartItems();
+            List<CartItemModel> cartItems = this.ValidCartItems();
 
             Assert.IsFalse(this.SingleItemPromotionStrategy.CanApplyPromotion(cartItems, promotion));
         }
@@ -70,7 +70,7 @@ namespace PromotionEngine.Tests.PromotionStrategyTests
             IPromotionModel promotion = this.ValidSingleItemPromotion();
             promotion.Active = false;
 
-            List<ICartItemModel> cartItems = this.ValidCartItems();
+            List<CartItemModel> cartItems = this.ValidCartItems();
 
             Assert.IsFalse(this.SingleItemPromotionStrategy.CanApplyPromotion(cartItems, promotion));
         }
@@ -79,7 +79,7 @@ namespace PromotionEngine.Tests.PromotionStrategyTests
         public void CanApplyPromotion_ReturnsFalse_EmptyCartItems()
         {
             IPromotionModel promotion = this.ValidSingleItemPromotion();
-            Assert.IsFalse(this.SingleItemPromotionStrategy.CanApplyPromotion(new List<ICartItemModel>(), promotion));
+            Assert.IsFalse(this.SingleItemPromotionStrategy.CanApplyPromotion(new List<CartItemModel>(), promotion));
         }
 
         [TestMethod]
@@ -88,7 +88,7 @@ namespace PromotionEngine.Tests.PromotionStrategyTests
             IPromotionModel promotion = this.ValidSingleItemPromotion();
             promotion.PromotionType = Enum.PromotionType.MultipleItems;
 
-            List<ICartItemModel> cartItems = this.ValidCartItems();
+            List<CartItemModel> cartItems = this.ValidCartItems();
 
             Assert.IsFalse(this.SingleItemPromotionStrategy.CanApplyPromotion(cartItems, promotion));
         }
@@ -98,7 +98,7 @@ namespace PromotionEngine.Tests.PromotionStrategyTests
         {
             IPromotionModel promotion = this.ValidSingleItemPromotion();
 
-            List<ICartItemModel> cartItems = this.ValidCartItems();
+            List<CartItemModel> cartItems = this.ValidCartItems();
 
             Assert.IsTrue(this.SingleItemPromotionStrategy.CanApplyPromotion(cartItems, promotion));
         }
@@ -112,7 +112,7 @@ namespace PromotionEngine.Tests.PromotionStrategyTests
                 return x;
             }).ToList();
 
-            List<ICartItemModel> cartItems = this.ValidCartItems();
+            List<CartItemModel> cartItems = this.ValidCartItems();
 
             Assert.IsFalse(this.SingleItemPromotionStrategy.CanApplyPromotion(cartItems, promotion));
         }
@@ -122,7 +122,7 @@ namespace PromotionEngine.Tests.PromotionStrategyTests
         {
             IPromotionModel promotion = this.ValidSingleItemPromotion();
 
-            List<ICartItemModel> cartItems = this.ValidCartItems().Select(x =>
+            List<CartItemModel> cartItems = this.ValidCartItems().Select(x =>
             {
                 if (x.SKU == "A")
                 {
@@ -144,11 +144,11 @@ namespace PromotionEngine.Tests.PromotionStrategyTests
         {
             try
             {
-                List<ICartItemModel> cartItems = this.ValidCartItems();
+                List<CartItemModel> cartItems = this.ValidCartItems();
 
                 List<IPromotionModel> promotions = null;
 
-                List<ICartItemModel> processedItems = this.SingleItemPromotionStrategy.ApplyPromotions(cartItems, promotions);
+                List<CartItemModel> processedItems = this.SingleItemPromotionStrategy.ApplyPromotions(cartItems, promotions);
             }
             catch (ArgumentNullException ex)
             {
@@ -163,14 +163,14 @@ namespace PromotionEngine.Tests.PromotionStrategyTests
             {
                 IPromotionModel promotion = this.ValidSingleItemPromotion();
 
-                List<ICartItemModel> cartItems = null;
+                List<CartItemModel> cartItems = null;
 
                 List<IPromotionModel> promotions = new List<IPromotionModel>()
                 {
                     promotion
                 };
 
-                List<ICartItemModel> processedItems = this.SingleItemPromotionStrategy.ApplyPromotions(cartItems, promotions);
+                List<CartItemModel> processedItems = this.SingleItemPromotionStrategy.ApplyPromotions(cartItems, promotions);
             }
             catch (ArgumentNullException ex)
             {
@@ -181,11 +181,11 @@ namespace PromotionEngine.Tests.PromotionStrategyTests
         [TestMethod]
         public void ApplyPromotion_Success_EmptyPromotions()
         {
-            List<ICartItemModel> cartItems = this.ValidCartItems();
+            List<CartItemModel> cartItems = this.ValidCartItems();
 
             List<IPromotionModel> promotions = new List<IPromotionModel>();
 
-            List<ICartItemModel> processedItems = this.SingleItemPromotionStrategy.ApplyPromotions(cartItems, promotions);
+            List<CartItemModel> processedItems = this.SingleItemPromotionStrategy.ApplyPromotions(cartItems, promotions);
 
             Assert.AreEqual(cartItems, processedItems);
         }
@@ -195,14 +195,14 @@ namespace PromotionEngine.Tests.PromotionStrategyTests
         {
             IPromotionModel promotion = this.ValidSingleItemPromotion();
 
-            List<ICartItemModel> cartItems = new List<ICartItemModel>();
+            List<CartItemModel> cartItems = new List<CartItemModel>();
 
             List<IPromotionModel> promotions = new List<IPromotionModel>()
             {
                 promotion
             };
 
-            List<ICartItemModel> processedItems = this.SingleItemPromotionStrategy.ApplyPromotions(cartItems, promotions);
+            List<CartItemModel> processedItems = this.SingleItemPromotionStrategy.ApplyPromotions(cartItems, promotions);
 
             Assert.IsFalse(processedItems.Any());
         }
@@ -212,14 +212,14 @@ namespace PromotionEngine.Tests.PromotionStrategyTests
         {
             IPromotionModel promotion = this.ValidSingleItemPromotion();
 
-            List<ICartItemModel> cartItems = this.ValidCartItems();
+            List<CartItemModel> cartItems = this.ValidCartItems();
 
             List<IPromotionModel> promotions = new List<IPromotionModel>()
             {
                 promotion
             };
 
-            List<ICartItemModel> processedItems = this.SingleItemPromotionStrategy.ApplyPromotions(cartItems, promotions);
+            List<CartItemModel> processedItems = this.SingleItemPromotionStrategy.ApplyPromotions(cartItems, promotions);
 
             Assert.AreEqual(130, processedItems.First(x => x.SKU == "A").TotalPrice);
             Assert.AreEqual(60, processedItems.First(x => x.SKU == "B").TotalPrice);
@@ -230,7 +230,7 @@ namespace PromotionEngine.Tests.PromotionStrategyTests
         {
             IPromotionModel promotion = this.ValidSingleItemPromotion();
 
-            List<ICartItemModel> cartItems = this.ValidCartItems();
+            List<CartItemModel> cartItems = this.ValidCartItems();
 
             List<IPromotionModel> promotions = new List<IPromotionModel>()
             {
@@ -251,7 +251,7 @@ namespace PromotionEngine.Tests.PromotionStrategyTests
                 })
             };
 
-            List<ICartItemModel> processedItems = this.SingleItemPromotionStrategy.ApplyPromotions(cartItems, promotions);
+            List<CartItemModel> processedItems = this.SingleItemPromotionStrategy.ApplyPromotions(cartItems, promotions);
 
             Assert.AreEqual(130, processedItems.First(x => x.SKU == "A").TotalPrice);
             Assert.AreEqual(45, processedItems.First(x => x.SKU == "B").TotalPrice);
@@ -267,14 +267,14 @@ namespace PromotionEngine.Tests.PromotionStrategyTests
                 return x;
             }).ToList();
 
-            List<ICartItemModel> cartItems = this.ValidCartItems();
+            List<CartItemModel> cartItems = this.ValidCartItems();
 
             List<IPromotionModel> promotions = new List<IPromotionModel>()
             {
                 promotion
             };
 
-            List<ICartItemModel> processedItems = this.SingleItemPromotionStrategy.ApplyPromotions(cartItems, promotions);
+            List<CartItemModel> processedItems = this.SingleItemPromotionStrategy.ApplyPromotions(cartItems, promotions);
 
             Assert.AreEqual(150, processedItems.First(x => x.SKU == "A").TotalPrice);
             Assert.AreEqual(60, processedItems.First(x => x.SKU == "B").TotalPrice);
@@ -286,7 +286,7 @@ namespace PromotionEngine.Tests.PromotionStrategyTests
         {
             IPromotionModel promotion = this.ValidSingleItemPromotion();
 
-            List<ICartItemModel> cartItems = this.ValidCartItems().Select(x=> 
+            List<CartItemModel> cartItems = this.ValidCartItems().Select(x=> 
             {
                 if (x.SKU == "A")
                 {
@@ -301,7 +301,7 @@ namespace PromotionEngine.Tests.PromotionStrategyTests
                 promotion
             };
 
-            List<ICartItemModel> processedItems = this.SingleItemPromotionStrategy.ApplyPromotions(cartItems, promotions);
+            List<CartItemModel> processedItems = this.SingleItemPromotionStrategy.ApplyPromotions(cartItems, promotions);
 
             Assert.AreEqual(180, processedItems.First(x => x.SKU == "A").TotalPrice);
             Assert.AreEqual(60, processedItems.First(x => x.SKU == "B").TotalPrice);
@@ -312,7 +312,7 @@ namespace PromotionEngine.Tests.PromotionStrategyTests
         {
             IPromotionModel promotion = this.ValidSingleItemPromotion();
 
-            List<ICartItemModel> cartItems = this.ValidCartItems().Select(x =>
+            List<CartItemModel> cartItems = this.ValidCartItems().Select(x =>
             {
                 x.PromotionApplied = true;
                 return x;
@@ -323,7 +323,7 @@ namespace PromotionEngine.Tests.PromotionStrategyTests
                 promotion
             };
 
-            List<ICartItemModel> processedItems = this.SingleItemPromotionStrategy.ApplyPromotions(cartItems, promotions);
+            List<CartItemModel> processedItems = this.SingleItemPromotionStrategy.ApplyPromotions(cartItems, promotions);
 
             Assert.AreEqual(150, processedItems.First(x => x.SKU == "A").TotalPrice);
             Assert.AreEqual(60, processedItems.First(x => x.SKU == "B").TotalPrice);
@@ -336,7 +336,7 @@ namespace PromotionEngine.Tests.PromotionStrategyTests
         {
             IPromotionModel promotion = this.ValidSingleItemPromotion();
 
-            List<ICartItemModel> cartItems = this.ValidCartItems().Select(x =>
+            List<CartItemModel> cartItems = this.ValidCartItems().Select(x =>
             {
                 if (x.SKU == "A")
                 {
@@ -351,7 +351,7 @@ namespace PromotionEngine.Tests.PromotionStrategyTests
                 promotion
             };
 
-            List<ICartItemModel> processedItems = this.SingleItemPromotionStrategy.ApplyPromotions(cartItems, promotions);
+            List<CartItemModel> processedItems = this.SingleItemPromotionStrategy.ApplyPromotions(cartItems, promotions);
 
             Assert.AreEqual(150, processedItems.First(x => x.SKU == "C").TotalPrice);
             Assert.AreEqual(60, processedItems.First(x => x.SKU == "B").TotalPrice);
@@ -362,7 +362,7 @@ namespace PromotionEngine.Tests.PromotionStrategyTests
         {
             IPromotionModel promotion = this.ValidSingleItemPromotion();
 
-            List<ICartItemModel> cartItems = this.ValidCartItems();
+            List<CartItemModel> cartItems = this.ValidCartItems();
 
             cartItems.Add(new CartItemModel()
             {
@@ -401,7 +401,7 @@ namespace PromotionEngine.Tests.PromotionStrategyTests
                 })
             };
 
-            List<ICartItemModel> processedItems = this.SingleItemPromotionStrategy.ApplyPromotions(cartItems, promotions);
+            List<CartItemModel> processedItems = this.SingleItemPromotionStrategy.ApplyPromotions(cartItems, promotions);
 
             Assert.AreEqual(130, processedItems.First(x => x.SKU == "A").TotalPrice);
             Assert.AreEqual(45, processedItems.First(x => x.SKU == "B").TotalPrice);
@@ -440,9 +440,9 @@ namespace PromotionEngine.Tests.PromotionStrategyTests
         /// A Valid collection of cart items.
         /// </summary>
         /// <returns>A valid collection of cart items.</returns>
-        private List<ICartItemModel> ValidCartItems()
+        private List<CartItemModel> ValidCartItems()
         {
-            return new List<ICartItemModel>()
+            return new List<CartItemModel>()
             {
                 new CartItemModel()
                 {

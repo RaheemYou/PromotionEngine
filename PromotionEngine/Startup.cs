@@ -23,6 +23,7 @@ namespace PromotionEngine
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddSwaggerGen();
 
             services.AddSingleton<IAppSettings, AppSettings>();
 
@@ -45,6 +46,8 @@ namespace PromotionEngine
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI();
             }
 
             app.UseHttpsRedirection();

@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
-using PromotionEngine.Interfaces;
+using PromotionEngine.Models.BusinessModels;
 using System.Linq;
 
 namespace PromotionEngine.Validators
 {
-    public class CartValidator : AbstractValidator<ICartModel>
+    public class CartValidator : AbstractValidator<CartModel>
     {
         public CartValidator()
         {

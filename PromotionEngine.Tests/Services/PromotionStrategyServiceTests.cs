@@ -41,7 +41,7 @@ namespace PromotionEngine.Tests.Services
         {
             this.mockAppsettings.Setup(x => x.AllowedPromotionType).Returns(PromotionType.SingleItem.ToString());
 
-            this.promotionStrategyService.ApplyPromotionStrategies(new System.Collections.Generic.List<ICartItemModel>());
+            this.promotionStrategyService.ApplyPromotionStrategies(new System.Collections.Generic.List<CartItemModel>());
 
             // Verify the log message.
             this.mockLogger.Verify(x => x.Log(
@@ -57,7 +57,7 @@ namespace PromotionEngine.Tests.Services
         {
             this.mockAppsettings.Setup(x => x.AllowedPromotionType).Returns(PromotionType.MultipleItems.ToString());
 
-            this.promotionStrategyService.ApplyPromotionStrategies(new System.Collections.Generic.List<ICartItemModel>());
+            this.promotionStrategyService.ApplyPromotionStrategies(new System.Collections.Generic.List<CartItemModel>());
 
             // Verify the log message.
             this.mockLogger.Verify(x => x.Log(
@@ -73,7 +73,7 @@ namespace PromotionEngine.Tests.Services
         {
             this.mockAppsettings.Setup(x => x.AllowedPromotionType).Returns("");
 
-            this.promotionStrategyService.ApplyPromotionStrategies(new System.Collections.Generic.List<ICartItemModel>());
+            this.promotionStrategyService.ApplyPromotionStrategies(new System.Collections.Generic.List<CartItemModel>());
 
             // Verify the log message.
             this.mockLogger.Verify(x => x.Log(
@@ -89,7 +89,7 @@ namespace PromotionEngine.Tests.Services
         {
             this.mockAppsettings.Setup(x => x.AllowedPromotionType).Returns($"{PromotionType.SingleItem.ToString()},{PromotionType.MultipleItems.ToString()}");
 
-            List<ICartItemModel> cartItems = new List<ICartItemModel>();
+            List<CartItemModel> cartItems = new List<CartItemModel>();
             cartItems.Add(new CartItemModel()
             {
                 SKU = "A",
@@ -112,7 +112,7 @@ namespace PromotionEngine.Tests.Services
                 TotalPrice = 20,
             });
 
-            List<ICartItemModel> appliedPromotions = this.promotionStrategyService.ApplyPromotionStrategies(cartItems);
+            List<CartItemModel> appliedPromotions = this.promotionStrategyService.ApplyPromotionStrategies(cartItems);
 
             Assert.AreEqual(50, appliedPromotions.First(x => x.SKU == "A").TotalPrice);
             Assert.AreEqual(30, appliedPromotions.First(x => x.SKU == "B").TotalPrice);
@@ -124,7 +124,7 @@ namespace PromotionEngine.Tests.Services
         {
             this.mockAppsettings.Setup(x => x.AllowedPromotionType).Returns($"{PromotionType.SingleItem.ToString()},{PromotionType.MultipleItems.ToString()}");
 
-            List<ICartItemModel> cartItems = new List<ICartItemModel>();
+            List<CartItemModel> cartItems = new List<CartItemModel>();
             cartItems.Add(new CartItemModel()
             {
                 SKU = "A",
@@ -147,7 +147,7 @@ namespace PromotionEngine.Tests.Services
                 TotalPrice = 20,
             });
 
-            List<ICartItemModel> appliedPromotions = this.promotionStrategyService.ApplyPromotionStrategies(cartItems);
+            List<CartItemModel> appliedPromotions = this.promotionStrategyService.ApplyPromotionStrategies(cartItems);
 
             Assert.AreEqual(230, appliedPromotions.First(x => x.SKU == "A").TotalPrice);
             Assert.AreEqual(120, appliedPromotions.First(x => x.SKU == "B").TotalPrice);
@@ -159,7 +159,7 @@ namespace PromotionEngine.Tests.Services
         {
             this.mockAppsettings.Setup(x => x.AllowedPromotionType).Returns($"{PromotionType.SingleItem.ToString()},{PromotionType.MultipleItems.ToString()}");
 
-            List<ICartItemModel> cartItems = new List<ICartItemModel>();
+            List<CartItemModel> cartItems = new List<CartItemModel>();
             cartItems.Add(new CartItemModel()
             {
                 SKU = "A",
@@ -189,7 +189,7 @@ namespace PromotionEngine.Tests.Services
                 TotalPrice = 15,
             });
 
-            List<ICartItemModel> appliedPromotions = this.promotionStrategyService.ApplyPromotionStrategies(cartItems);
+            List<CartItemModel> appliedPromotions = this.promotionStrategyService.ApplyPromotionStrategies(cartItems);
 
             Assert.AreEqual(130, appliedPromotions.First(x => x.SKU == "A").TotalPrice);
             Assert.AreEqual(120, appliedPromotions.First(x => x.SKU == "B").TotalPrice);

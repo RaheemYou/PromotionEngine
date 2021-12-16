@@ -2,6 +2,7 @@
 using PromotionEngine.Abstracts;
 using PromotionEngine.Enum;
 using PromotionEngine.Interfaces;
+using PromotionEngine.Models.BusinessModels;
 using PromotionEngine.Services.PromotionStrategies;
 using System.Collections.Generic;
 
@@ -31,7 +32,7 @@ namespace PromotionEngine.Services
         /// </summary>
         /// <param name="cartItems">The cartItems.</param>
         /// <returns>The updated cart items with applied promotions.</returns>
-        public List<ICartItemModel> ApplyPromotionStrategies(List<ICartItemModel> cartItems)
+        public List<CartItemModel> ApplyPromotionStrategies(List<CartItemModel> cartItems)
         {
             string allowedPromotionTypes = this.appSettings.AllowedPromotionType;
 

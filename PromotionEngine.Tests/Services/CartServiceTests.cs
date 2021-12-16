@@ -43,7 +43,7 @@ namespace PromotionEngine.Tests.Services
         {
             this.mockAppsettings.Setup(x => x.AllowedPromotionType).Returns($"{PromotionType.SingleItem.ToString()},{PromotionType.MultipleItems.ToString()}");
 
-            List<ICartItemModel> cartItems = new List<ICartItemModel>();
+            List<CartItemModel> cartItems = new List<CartItemModel>();
             cartItems.Add(new CartItemModel()
             {
                 SKU = "A",
@@ -66,12 +66,12 @@ namespace PromotionEngine.Tests.Services
                 TotalPrice = 20,
             });
 
-            ICartModel cart = new CartModel()
+            CartModel cart = new CartModel()
             {
                 CartItems = cartItems
             };
 
-            ICartModel updatedCart = this.cartService.CalculateTotalPromotionPrice(cart);
+            CartModel updatedCart = this.cartService.CalculateTotalPromotionPrice(cart);
 
             Assert.AreEqual(100, updatedCart.TotalPrice);
         }
@@ -81,7 +81,7 @@ namespace PromotionEngine.Tests.Services
         {
             this.mockAppsettings.Setup(x => x.AllowedPromotionType).Returns($"{PromotionType.SingleItem.ToString()},{PromotionType.MultipleItems.ToString()}");
 
-            List<ICartItemModel> cartItems = new List<ICartItemModel>();
+            List<CartItemModel> cartItems = new List<CartItemModel>();
             cartItems.Add(new CartItemModel()
             {
                 SKU = "A",
@@ -104,12 +104,12 @@ namespace PromotionEngine.Tests.Services
                 TotalPrice = 20,
             });
 
-            ICartModel cart = new CartModel()
+            CartModel cart = new CartModel()
             {
                 CartItems = cartItems
             };
 
-            ICartModel updatedCart = this.cartService.CalculateTotalPromotionPrice(cart);
+            CartModel updatedCart = this.cartService.CalculateTotalPromotionPrice(cart);
 
             Assert.AreEqual(370, updatedCart.TotalPrice);
         }
@@ -119,7 +119,7 @@ namespace PromotionEngine.Tests.Services
         {
             this.mockAppsettings.Setup(x => x.AllowedPromotionType).Returns($"{PromotionType.SingleItem.ToString()},{PromotionType.MultipleItems.ToString()}");
 
-            List<ICartItemModel> cartItems = new List<ICartItemModel>();
+            List<CartItemModel> cartItems = new List<CartItemModel>();
             cartItems.Add(new CartItemModel()
             {
                 SKU = "A",
@@ -149,12 +149,12 @@ namespace PromotionEngine.Tests.Services
                 TotalPrice = 15,
             });
 
-            ICartModel cart = new CartModel()
+            CartModel cart = new CartModel()
             {
                 CartItems = cartItems
             };
 
-            ICartModel updatedCart = this.cartService.CalculateTotalPromotionPrice(cart);
+            CartModel updatedCart = this.cartService.CalculateTotalPromotionPrice(cart);
 
             Assert.AreEqual(280, updatedCart.TotalPrice);
         }

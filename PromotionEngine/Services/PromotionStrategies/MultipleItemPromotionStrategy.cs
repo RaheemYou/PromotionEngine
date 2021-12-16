@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using PromotionEngine.Enum;
 using PromotionEngine.Interfaces;
+using PromotionEngine.Models.BusinessModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,7 +41,7 @@ namespace PromotionEngine.Services.PromotionStrategies
         /// <param name="cartItems">The cart Items.</param>
         /// <param name="promotions">The promotion.</param>
         /// <returns>The cart items with the promotions applied.</returns>
-        public List<ICartItemModel> ApplyPromotions(List<ICartItemModel> cartItems, IList<IPromotionModel> promotions)
+        public List<CartItemModel> ApplyPromotions(List<CartItemModel> cartItems, IList<IPromotionModel> promotions)
         {
             if (cartItems == null)
             {
@@ -55,7 +56,7 @@ namespace PromotionEngine.Services.PromotionStrategies
             if (cartItems.Any() && promotions.Any())
             {
                 // Add the promotions that have been applied potentially by another strategy.
-                List<ICartItemModel> itemsWithPromotionApplied = cartItems.Where(x=> x.PromotionApplied).ToList();
+                List<CartItemModel> itemsWithPromotionApplied = cartItems.Where(x=> x.PromotionApplied).ToList();
 
                 foreach (IPromotionModel promotion in promotions)
                 {
@@ -66,7 +67,7 @@ namespace PromotionEngine.Services.PromotionStrategies
                         if (!itemsWithPromotionApplied.Any(x => promotion.PromotionItems.Any(y => y.SKU == x.SKU)))
                         {
                             // Get the cart items for the promotion.
-                            List<ICartItemModel> promotedItems = cartItems.Where(x => promotion.PromotionItems.Any(y => y.SKU == x.SKU)).ToList();
+                            List<CartItemModel> promotedItems = cartItems.Where(x => promotion.PromotionItems.Any(y => y.SKU == x.SKU)).ToList();
 
                             if (promotedItems.Any())
                             {
@@ -75,7 +76,7 @@ namespace PromotionEngine.Services.PromotionStrategies
                                 // Calculate the promotion that should be applied to the cart items.
                                 for (int i = 0; i < promotedItems.Count; i++)
                                 {
-                                    ICartItemModel promotedItem = promotedItems.ElementAt(i);
+                                    CartItemModel promotedItem = promotedItems.ElementAt(i);
 
                                     // The first element in the cart item is the ine that has the promotion price applied to it.
                                     this.ApplyToCartItem(promotedItem, promotion, i == 0);
@@ -88,7 +89,7 @@ namespace PromotionEngine.Services.PromotionStrategies
                 }
 
                 // Get the items that did not have a promotion.
-                List<ICartItemModel> notPromotionItems = cartItems.Where(x => !itemsWithPromotionApplied.Any(y => y.SKU == x.SKU)).ToList();
+                List<CartItemModel> notPromotionItems = cartItems.Where(x => !itemsWithPromotionApplied.Any(y => y.SKU == x.SKU)).ToList();
                 itemsWithPromotionApplied.AddRange(notPromotionItems);
 
                 return itemsWithPromotionApplied;
@@ -103,7 +104,7 @@ namespace PromotionEngine.Services.PromotionStrategies
         /// <param name="cartItems">The cartItems.</param>
         /// <param name="promotion">The promotion.</param>
         /// <returns>True if the promotion can be applied to the items.</returns>
-        public bool CanApplyPromotion(IList<ICartItemModel> cartItems, IPromotionModel promotion)
+        public bool CanApplyPromotion(IList<CartItemModel> cartItems, IPromotionModel promotion)
         {
             if (cartItems == null)
             {
@@ -145,7 +146,7 @@ namespace PromotionEngine.Services.PromotionStrategies
         /// <param name="promotion">The promotion.</param>
         /// <param name="applyPromotionPrice">Whether to apply the promotion price to the cart item price.</param>
         /// <returns>The updated cart item.</returns>
-        private ICartItemModel ApplyToCartItem(ICartItemModel cartItem, IPromotionModel promotion, bool applyPromotionPrice)
+        private CartItemModel ApplyToCartItem(CartItemModel cartItem, IPromotionModel promotion, bool applyPromotionPrice)
         {
             int promotionItemQuantity = promotion.PromotionItems.First(x => x.SKU == cartItem.SKU).Quantity;
 

@@ -1,7 +1,9 @@
-﻿namespace PromotionEngine.Interfaces
+﻿using PromotionEngine.Models.BusinessModels;
+
+namespace PromotionEngine.Interfaces
 {
     public interface ICartService
     {
-        ICartModel CalculateTotalPromotionPrice(ICartModel cartModel);
+        CartModel CalculateTotalPromotionPrice(CartModel cartModel);
     }
 }

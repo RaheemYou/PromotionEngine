@@ -1,11 +1,12 @@
 ﻿using PromotionEngine.Interfaces;
+using System.Text.Json.Serialization;
 
 namespace PromotionEngine.Models.BusinessModels
 {
     /// <summary>
     /// The CartItem Model class.
     /// </summary>
-    public class CartItemModel : ICartItemModel
+    public class CartItemModel
     {
         /// <summary>
         /// Gets or sets the item string.
@@ -30,6 +31,7 @@ namespace PromotionEngine.Models.BusinessModels
         /// <summary>
         /// Gets or sets the PromotionApplied.
         /// </summary>
+        [JsonIgnore]
         public bool PromotionApplied { get; set; }
     }
 }

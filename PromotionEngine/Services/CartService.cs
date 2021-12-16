@@ -3,6 +3,7 @@ using FluentValidation.Results;
 using Microsoft.Extensions.Logging;
 using PromotionEngine.Abstracts;
 using PromotionEngine.Interfaces;
+using PromotionEngine.Models.BusinessModels;
 using PromotionEngine.Validators;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +24,7 @@ namespace PromotionEngine.Services
         /// </summary>
         /// <param name="cartModel">The cartModel.</param>
         /// <returns>The updated cartmodel with promotions applied.</returns>
-        public ICartModel CalculateTotalPromotionPrice(ICartModel cartModel)
+        public CartModel CalculateTotalPromotionPrice(CartModel cartModel)
         {
             this.logger.LogInformation("Calculating the total promotion price.");
 

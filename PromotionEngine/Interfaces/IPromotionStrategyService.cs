@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using PromotionEngine.Models.BusinessModels;
+using System.Collections.Generic;
 
 namespace PromotionEngine.Interfaces
 {
     public interface IPromotionStrategyService
     {
-        List<ICartItemModel> ApplyPromotionStrategies(List<ICartItemModel> cartItems);
+        List<CartItemModel> ApplyPromotionStrategies(List<CartItemModel> cartItems);
     }
 }

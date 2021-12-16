@@ -6,12 +6,12 @@ namespace PromotionEngine.Models.BusinessModels
     /// <summary>
     /// The CartModel class.
     /// </summary>
-    public class CartModel : ICartModel
+    public class CartModel
     {
         /// <summary>
         /// Gets or sets a collection of CartItems.
         /// </summary>
-        public List<ICartItemModel> CartItems { get; set; }
+        public List<CartItemModel> CartItems { get; set; }
 
         /// <summary>
         /// Gets or sets the TotalPrice. 

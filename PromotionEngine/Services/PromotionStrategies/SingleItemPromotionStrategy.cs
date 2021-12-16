@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using PromotionEngine.Enum;
 using PromotionEngine.Interfaces;
+using PromotionEngine.Models.BusinessModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,7 +38,7 @@ namespace PromotionEngine.Services.PromotionStrategies
         /// <param name="cartItems">The cart items.</param>
         /// <param name="promotions">The promotion.</param>
         /// <returns>An updated list of cart items.</returns>
-        public List<ICartItemModel> ApplyPromotions(List<ICartItemModel> cartItems, IList<IPromotionModel> promotions)
+        public List<CartItemModel> ApplyPromotions(List<CartItemModel> cartItems, IList<IPromotionModel> promotions)
         {
             if (cartItems == null)
             {
@@ -52,7 +53,7 @@ namespace PromotionEngine.Services.PromotionStrategies
             if (cartItems.Any() && promotions.Any())
             {
                 // Add the promotions that have been applied potentially by another strategy.
-                List<ICartItemModel> itemsWithPromotionApplied = cartItems.Where(x => x.PromotionApplied).ToList();
+                List<CartItemModel> itemsWithPromotionApplied = cartItems.Where(x => x.PromotionApplied).ToList();
 
                 foreach (IPromotionModel promotion in promotions)
                 {
@@ -63,7 +64,7 @@ namespace PromotionEngine.Services.PromotionStrategies
                         IPromotionItemModel promotionItem = promotion.PromotionItems.First();
 
                         // Get the cart item related to the promotion item.
-                        ICartItemModel cartItem = cartItems.First(x => x.SKU == promotionItem.SKU);
+                        CartItemModel cartItem = cartItems.First(x => x.SKU == promotionItem.SKU);
 
                         // Only apply the promotion if a promotion has not already been applied to it.
                         if (!itemsWithPromotionApplied.Any(x => x.SKU == promotionItem.SKU))
@@ -75,7 +76,7 @@ namespace PromotionEngine.Services.PromotionStrategies
                 }
 
                 // Get the items that did not have a promotion.
-                List<ICartItemModel> notPromotionItems = cartItems.Where(x => !itemsWithPromotionApplied.Any(y => y.SKU == x.SKU)).ToList();
+                List<CartItemModel> notPromotionItems = cartItems.Where(x => !itemsWithPromotionApplied.Any(y => y.SKU == x.SKU)).ToList();
                 itemsWithPromotionApplied.AddRange(notPromotionItems);
 
                 return itemsWithPromotionApplied;
@@ -90,7 +91,7 @@ namespace PromotionEngine.Services.PromotionStrategies
         /// <param name="cartItems">The cartItems.</param>
         /// <param name="promotion">The promotion.</param>
         /// <returns>True if the promotion can be applied to the items.</returns>
-        public bool CanApplyPromotion(IList<ICartItemModel> cartItems, IPromotionModel promotion)
+        public bool CanApplyPromotion(IList<CartItemModel> cartItems, IPromotionModel promotion)
         {
             if (cartItems == null)
             {
@@ -123,7 +124,7 @@ namespace PromotionEngine.Services.PromotionStrategies
         /// <param name="promotion">The promotion.</param>
         /// <param name="promotionItem">The promotionItem.</param>
         /// <returns>The updated cart item.</returns>
-        private ICartItemModel ApplyToCartItem(ICartItemModel cartItem, IPromotionModel promotion, IPromotionItemModel promotionItem)
+        private CartItemModel ApplyToCartItem(CartItemModel cartItem, IPromotionModel promotion, IPromotionItemModel promotionItem)
         {
             int remainder =  cartItem.Quantity % promotionItem.Quantity;
             int lotsOfPromotions = cartItem.Quantity / promotionItem.Quantity;
