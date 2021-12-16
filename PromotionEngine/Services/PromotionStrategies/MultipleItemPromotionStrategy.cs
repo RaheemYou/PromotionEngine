@@ -5,24 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace PromotionEngine.PromotionStrategies
+namespace PromotionEngine.Services.PromotionStrategies
 {
     /// <summary>
     /// The MultipleItemPromotionStrategy class.
     /// </summary>
     public class MultipleItemPromotionStrategy : IPromotionStrategy
     {
-        private ILogger<MultipleItemPromotionStrategy> logger { get; set; }
-
-        /// <summary>
-        /// Initializes a new instance of the MultipleItemPromotionStrategy class.
-        /// </summary>
-        /// <param name="logger">The logger.</param>
-        public MultipleItemPromotionStrategy(ILogger<MultipleItemPromotionStrategy> logger)
-        {
-            this.logger = logger;
-        }
-
         /// <summary>
         /// Gets the promotion type.
         /// </summary>
@@ -32,6 +21,17 @@ namespace PromotionEngine.PromotionStrategies
             {
                 return PromotionType.MultipleItems;
             }
+        }
+
+        private ILogger<MultipleItemPromotionStrategy> logger { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the MultipleItemPromotionStrategy class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        public MultipleItemPromotionStrategy(ILogger<MultipleItemPromotionStrategy> logger)
+        {
+            this.logger = logger;
         }
 
         /// <summary>
@@ -115,14 +115,14 @@ namespace PromotionEngine.PromotionStrategies
                 throw new ArgumentNullException("promotion");
             }
 
-            if (cartItems.Any() && promotion.Active && promotion.PromotionItems.Any() && promotion.PromotionType == PromotionType.MultipleItems)
+            if (cartItems.Any() && promotion.Active && promotion.PromotionItems.Any() && promotion.PromotionType == this.PromotionType)
             {
                 List<string> promotionItems = promotion.PromotionItems.Select(x => x.SKU).ToList();
 
                 if (promotionItems.Count == cartItems.Count(x => promotionItems.Contains(x.SKU)))
                 {
                     // Ensure the quantity is correct.
-                    foreach(IPromotionItem promotionItem in promotion.PromotionItems)
+                    foreach(IPromotionItemModel promotionItem in promotion.PromotionItems)
                     {
                         // If the cart item has less quantity than what is needed for the promotion then the promotion cannot be applied.
                         if (cartItems.First(x => x.SKU == promotionItem.SKU).Quantity < promotionItem.Quantity)

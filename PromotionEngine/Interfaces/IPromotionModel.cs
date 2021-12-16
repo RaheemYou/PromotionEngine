@@ -7,7 +7,7 @@ namespace PromotionEngine.Interfaces
     {
         decimal PromotionPrice { get; set; }
         PromotionType PromotionType { get; set; }
-        List<IPromotionItem> PromotionItems { get; set; }
+        List<IPromotionItemModel> PromotionItems { get; set; }
         bool Active { get; set; }
     }
 }

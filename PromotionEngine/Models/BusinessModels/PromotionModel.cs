@@ -1,7 +1,7 @@
 ﻿using PromotionEngine.Enum;
 using PromotionEngine.Interfaces;
-using PromotionEngine.Models.EntityModels;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace PromotionEngine.Models.BusinessModels
 {
@@ -59,17 +59,21 @@ namespace PromotionEngine.Models.BusinessModels
         /// <summary>
         /// Gets or sets the collection of Promotion items related to the promotion.
         /// </summary>
-        public List<IPromotionItem> PromotionItems
+        public List<IPromotionItemModel> PromotionItems
         {
             get
             {
-                return this.promotion.PromotionItems;
+                if (this.promotionItems == null && this.promotion.PromotionItems != null)
+                {
+                    this.promotionItems = this.promotion.PromotionItems.Select(x => (IPromotionItemModel)(new PromotionItemModel(x))).ToList();
+                }
+
+                return this.promotionItems;
             }
 
             set
             {
-                // By setting this entity model, if we are using entity framework and the entity model has been assigned correctly, this will allow a commit to persist the data.
-                this.promotion.PromotionItems = value;
+                this.promotionItems = value;
             }
         }
 
@@ -89,5 +93,7 @@ namespace PromotionEngine.Models.BusinessModels
                 this.promotion.Active = value;
             }
         }
+
+        private List<IPromotionItemModel> promotionItems { get; set; }
     }
 }
