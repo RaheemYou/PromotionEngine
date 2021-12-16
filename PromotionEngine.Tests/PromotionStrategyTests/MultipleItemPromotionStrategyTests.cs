@@ -4,7 +4,7 @@ using Moq;
 using PromotionEngine.Interfaces;
 using PromotionEngine.Models.BusinessModels;
 using PromotionEngine.Models.EntityModels;
-using PromotionEngine.PromotionStrategies;
+using PromotionEngine.Services.PromotionStrategies;
 using PromotionEngine.Tests.Abstracts;
 using System;
 using System.Collections.Generic;
@@ -55,275 +55,109 @@ namespace PromotionEngine.Tests.PromotionStrategyTests
         [TestMethod]
         public void CanApplyPromotion_ReturnsFalse_WhenPromotionHasNoItems()
         {
-            IPromotion promotion = new Promotion();
-            promotion.Active = true;
-            promotion.PromotionItems = new List<IPromotionItem>();
 
-            List<ICartItemModel> cartItems = new List<ICartItemModel>()
-            {
-                new CartItemModel()
-                {
-                    SKU = "A",
-                    Price = 100,
-                    PromotionApplied = false,
-                    Quantity = 3,
-                    TotalPrice = 300,
-                }
-            };
+            IPromotionModel promotion = this.ValidMultipleItemPromotion();
+            promotion.PromotionItems = new List<IPromotionItemModel>();
 
-            Assert.IsFalse(this.multipleItemPromotionStrategy.CanApplyPromotion(cartItems, new PromotionModel(promotion)));
+            List<ICartItemModel> cartItems = this.ValidCartItems();
+
+            Assert.IsFalse(this.multipleItemPromotionStrategy.CanApplyPromotion(cartItems, promotion));
         }
 
         [TestMethod]
         public void CanApplyPromotion_ReturnsFalse_WhenPromotionIsInactive()
         {
-            IPromotion promotion = new Promotion();
+            IPromotionModel promotion = this.ValidMultipleItemPromotion();
             promotion.Active = false;
-            promotion.PromotionItems = new List<IPromotionItem>();
 
-            List<ICartItemModel> cartItems = new List<ICartItemModel>()
-            {
-                new CartItemModel()
-                {
-                    SKU = "A",
-                    Price = 100,
-                    PromotionApplied = false,
-                    Quantity = 3,
-                    TotalPrice = 300,
-                }
-            };
+            List<ICartItemModel> cartItems = this.ValidCartItems();
 
-            Assert.IsFalse(this.multipleItemPromotionStrategy.CanApplyPromotion(cartItems, new PromotionModel(promotion)));
+            Assert.IsFalse(this.multipleItemPromotionStrategy.CanApplyPromotion(cartItems, promotion));
         }
 
         [TestMethod]
         public void CanApplyPromotion_ReturnsFalse_EmptyCartItems()
         {
-            IPromotion promotion = new Promotion();
-            promotion.Active = true;
-            promotion.PromotionItems = new List<IPromotionItem>();
+            IPromotionModel promotion = this.ValidMultipleItemPromotion();
 
-            Assert.IsFalse(this.multipleItemPromotionStrategy.CanApplyPromotion(new List<ICartItemModel>(), new PromotionModel(promotion)));
+            Assert.IsFalse(this.multipleItemPromotionStrategy.CanApplyPromotion(new List<ICartItemModel>(), promotion));
         }
 
         [TestMethod]
         public void CanApplyPromotion_False_SingleItemPromotion()
         {
-            IPromotion promotion = new Promotion()
-            {
-                Active = true,
-                PromotionItems = new List<IPromotionItem>()
-                {
-                    new PromotionItem()
-                    {
-                        SKU = "A",
-                        Quantity = 1,
-                    },
-                },
-                PromotionType = Enum.PromotionType.SingleItem,
-            };
+            IPromotionModel promotion = this.ValidMultipleItemPromotion();
+            promotion.PromotionType = Enum.PromotionType.SingleItem;
 
-            List<ICartItemModel> cartItems = new List<ICartItemModel>()
-            {
-                new CartItemModel()
-                {
-                    SKU = "A",
-                    Price = 100,
-                    PromotionApplied = false,
-                    Quantity = 1,
-                    TotalPrice = 100,
-                },
-                new CartItemModel()
-                {
-                    SKU = "B",
-                    Price = 100,
-                    PromotionApplied = false,
-                    Quantity = 1,
-                    TotalPrice = 100,
-                }
-            };
+            List<ICartItemModel> cartItems = this.ValidCartItems();
 
-            Assert.IsFalse(this.multipleItemPromotionStrategy.CanApplyPromotion(cartItems, new PromotionModel(promotion)));
+            Assert.IsFalse(this.multipleItemPromotionStrategy.CanApplyPromotion(cartItems, promotion));
         }
 
         [TestMethod]
         public void CanApplyPromotion_True()
         {
-            IPromotion promotion = new Promotion()
-            {
-                Active = true,
-                PromotionItems = new List<IPromotionItem>()
-                {
-                    new PromotionItem()
-                    {
-                        SKU = "A",
-                        Quantity = 1,
-                    },
-                    new PromotionItem()
-                    {
-                        SKU = "B",
-                        Quantity = 1,
-                    },
-                },
-                PromotionType = Enum.PromotionType.MultipleItems,
-            };
+            IPromotionModel promotion = this.ValidMultipleItemPromotion();
 
-            List<ICartItemModel> cartItems = new List<ICartItemModel>()
-            {
-                new CartItemModel()
-                {
-                    SKU = "A",
-                    Price = 100,
-                    PromotionApplied = false,
-                    Quantity = 1,
-                    TotalPrice = 100,
-                },
-                new CartItemModel()
-                {
-                    SKU = "B",
-                    Price = 100,
-                    PromotionApplied = false,
-                    Quantity = 1,
-                    TotalPrice = 100,
-                }
-            };
+            List<ICartItemModel> cartItems = this.ValidCartItems();
 
-            Assert.IsTrue(this.multipleItemPromotionStrategy.CanApplyPromotion(cartItems, new PromotionModel(promotion)));
+            Assert.IsTrue(this.multipleItemPromotionStrategy.CanApplyPromotion(cartItems, promotion));
         }
 
         [TestMethod]
         public void CanApplyPromotion_False_InvalidQuantity()
         {
-            IPromotion promotion = new Promotion();
-            promotion.Active = true;
-            promotion.PromotionItems = new List<IPromotionItem>()
+            IPromotionModel promotion = this.ValidMultipleItemPromotion();
+            promotion.PromotionItems = promotion.PromotionItems.Select(x =>
             {
-                new PromotionItem()
-                {
-                    SKU = "A",
-                    Quantity = 2,
-                },
-                new PromotionItem()
-                {
-                    SKU = "B",
-                    Quantity = 1,
-                },
-            };
+                x.Quantity = 2;
+                return x;
+            }).ToList();
 
-            promotion.Active = true;
+            List<ICartItemModel> cartItems = this.ValidCartItems();
 
-
-            List<ICartItemModel> cartItems = new List<ICartItemModel>()
-            {
-                new CartItemModel()
-                {
-                    SKU = "A",
-                    Price = 100,
-                    PromotionApplied = false,
-                    Quantity = 1,
-                    TotalPrice = 100,
-                },
-                new CartItemModel()
-                {
-                    SKU = "B",
-                    Price = 100,
-                    PromotionApplied = false,
-                    Quantity = 1,
-                    TotalPrice = 100,
-                }
-            };
-
-            Assert.IsFalse(this.multipleItemPromotionStrategy.CanApplyPromotion(cartItems, new PromotionModel(promotion)));
+            Assert.IsFalse(this.multipleItemPromotionStrategy.CanApplyPromotion(cartItems, promotion));
         }
 
         [TestMethod]
         public void CanApplyPromotion_False_SingleMatchingSKU()
         {
-            IPromotion promotion = new Promotion();
-            promotion.Active = true;
-            promotion.PromotionItems = new List<IPromotionItem>()
-            {
-                new PromotionItem()
-                {
-                    SKU = "A",
-                    Quantity = 1,
-                },
-                new PromotionItem()
-                {
-                    SKU = "B",
-                    Quantity = 1,
-                },
-            };
+            IPromotionModel promotion = this.ValidMultipleItemPromotion();
 
-            promotion.Active = true;
-
-
-            List<ICartItemModel> cartItems = new List<ICartItemModel>()
-            {
-                new CartItemModel()
+            List<ICartItemModel> cartItems = this.ValidCartItems().Select(x=> 
+            { 
+                if (x.SKU == "C")
                 {
-                    SKU = "A",
-                    Price = 100,
-                    PromotionApplied = false,
-                    Quantity = 1,
-                    TotalPrice = 100,
-                },
-                new CartItemModel()
-                {
-                    SKU = "C",
-                    Price = 100,
-                    PromotionApplied = false,
-                    Quantity = 1,
-                    TotalPrice = 100,
+                    x.SKU = "A";
                 }
-            };
 
-            Assert.IsFalse(this.multipleItemPromotionStrategy.CanApplyPromotion(cartItems, new PromotionModel(promotion)));
+                return x;
+            }).ToList();
+
+            Assert.IsFalse(this.multipleItemPromotionStrategy.CanApplyPromotion(cartItems, promotion));
         }
 
         [TestMethod]
         public void CanApplyPromotion_False_NoMatchingSKU()
         {
-            IPromotion promotion = new Promotion();
-            promotion.Active = true;
-            promotion.PromotionItems = new List<IPromotionItem>()
+            IPromotionModel promotion = this.ValidMultipleItemPromotion();
+
+            List<ICartItemModel> cartItems = this.ValidCartItems().Select(x =>
             {
-                new PromotionItem()
+                if (x.SKU == "C")
                 {
-                    SKU = "A",
-                    Quantity = 1,
-                },
-                new PromotionItem()
-                {
-                    SKU = "B",
-                    Quantity = 1,
-                },
-            };
-
-            promotion.Active = true;
-
-
-            List<ICartItemModel> cartItems = new List<ICartItemModel>()
-            {
-                new CartItemModel()
-                {
-                    SKU = "C",
-                    Price = 100,
-                    PromotionApplied = false,
-                    Quantity = 1,
-                    TotalPrice = 100,
-                },
-                new CartItemModel()
-                {
-                    SKU = "D",
-                    Price = 100,
-                    PromotionApplied = false,
-                    Quantity = 1,
-                    TotalPrice = 100,
+                    x.SKU = "A";
                 }
-            };
 
-            Assert.IsFalse(this.multipleItemPromotionStrategy.CanApplyPromotion(cartItems, new PromotionModel(promotion)));
+                if (x.SKU == "D")
+                {
+                    x.SKU = "B";
+                }
+
+                return x;
+            }).ToList();
+
+            Assert.IsFalse(this.multipleItemPromotionStrategy.CanApplyPromotion(cartItems, promotion));
         }
 
         #endregion Can Apply Promotion Tests
@@ -335,25 +169,7 @@ namespace PromotionEngine.Tests.PromotionStrategyTests
         {
             try
             {
-                List<ICartItemModel> cartItems = new List<ICartItemModel>()
-                {
-                    new CartItemModel()
-                    {
-                        SKU = "A",
-                        Price = 100,
-                        PromotionApplied = false,
-                        Quantity = 1,
-                        TotalPrice = 100,
-                    },
-                    new CartItemModel()
-                    {
-                        SKU = "B",
-                        Price = 100,
-                        PromotionApplied = false,
-                        Quantity = 1,
-                        TotalPrice = 100,
-                    }
-                };
+                List<ICartItemModel> cartItems = this.ValidCartItems();
 
                 List<IPromotionModel> promotions = null;
 
@@ -370,32 +186,13 @@ namespace PromotionEngine.Tests.PromotionStrategyTests
         {
             try
             {
-                IPromotion promotion = new Promotion()
-                {
-                    Active = true,
-                    PromotionItems = new List<IPromotionItem>()
-                    {
-                        new PromotionItem()
-                        {
-                            SKU = "A",
-                            Quantity = 1,
-                        },
-                        new PromotionItem()
-                        {
-                            SKU = "B",
-                            Quantity = 1,
-
-                        },
-                    },
-                    PromotionPrice = 150,
-                    PromotionType = Enum.PromotionType.MultipleItems
-                };
+                IPromotionModel promotion = this.ValidMultipleItemPromotion();
 
                 List<ICartItemModel> cartItems = null;
 
                 List<IPromotionModel> promotions = new List<IPromotionModel>()
                 {
-                    new PromotionModel(promotion)
+                    promotion
                 };
 
                 List<ICartItemModel> processedItems = this.multipleItemPromotionStrategy.ApplyPromotions(cartItems, promotions);
@@ -409,25 +206,7 @@ namespace PromotionEngine.Tests.PromotionStrategyTests
         [TestMethod]
         public void ApplyPromotion_Success_EmptyPromotions()
         {
-            List<ICartItemModel> cartItems = new List<ICartItemModel>()
-            {
-                new CartItemModel()
-                {
-                    SKU = "A",
-                    Price = 100,
-                    PromotionApplied = false,
-                    Quantity = 1,
-                    TotalPrice = 100,
-                },
-                new CartItemModel()
-                {
-                    SKU = "B",
-                    Price = 100,
-                    PromotionApplied = false,
-                    Quantity = 1,
-                    TotalPrice = 100,
-                }
-            };
+            List<ICartItemModel> cartItems = this.ValidCartItems();
 
             List<IPromotionModel> promotions = new List<IPromotionModel>();
 
@@ -439,32 +218,13 @@ namespace PromotionEngine.Tests.PromotionStrategyTests
         [TestMethod]
         public void ApplyPromotion_Sucess_EmptyCartItems()
         {
-            IPromotion promotion = new Promotion()
-            {
-                Active = true,
-                PromotionItems = new List<IPromotionItem>()
-                {
-                    new PromotionItem()
-                    {
-                        SKU = "A",
-                        Quantity = 1,
-                    },
-                    new PromotionItem()
-                    {
-                        SKU = "B",
-                        Quantity = 1,
-
-                    },
-                },
-                PromotionPrice = 150,
-                PromotionType = Enum.PromotionType.MultipleItems
-            };
+            IPromotionModel promotion = this.ValidMultipleItemPromotion();
 
             List<ICartItemModel> cartItems = new List<ICartItemModel>();
 
             List<IPromotionModel> promotions = new List<IPromotionModel>()
             {
-                new PromotionModel(promotion)
+                promotion
             };
 
             List<ICartItemModel> processedItems = this.multipleItemPromotionStrategy.ApplyPromotions(cartItems, promotions);
@@ -475,50 +235,13 @@ namespace PromotionEngine.Tests.PromotionStrategyTests
         [TestMethod]
         public void ApplyPromotion_Success_SinglePromotion()
         {
-            IPromotion promotion = new Promotion()
-            {
-                Active = true,
-                PromotionItems = new List<IPromotionItem>()
-                {
-                    new PromotionItem()
-                    {
-                        SKU = "C",
-                        Quantity = 1,
-                    },
-                    new PromotionItem()
-                    {
-                        SKU = "D",
-                        Quantity = 1,
+            IPromotionModel promotion = this.ValidMultipleItemPromotion();
 
-                    },
-                },
-                PromotionPrice = 30,
-                PromotionType = Enum.PromotionType.MultipleItems
-            };
-
-            List<ICartItemModel> cartItems = new List<ICartItemModel>()
-            {
-                new CartItemModel()
-                {
-                    SKU = "C",
-                    Price = 20,
-                    PromotionApplied = false,
-                    Quantity = 1,
-                    TotalPrice = 20,
-                },
-                new CartItemModel()
-                {
-                    SKU = "D",
-                    Price = 15,
-                    PromotionApplied = false,
-                    Quantity = 1,
-                    TotalPrice = 15,
-                }
-            };
+            List<ICartItemModel> cartItems = this.ValidCartItems();
 
             List<IPromotionModel> promotions = new List<IPromotionModel>()
             {
-                new PromotionModel(promotion)
+               promotion
             };
 
             List<ICartItemModel> processedItems = this.multipleItemPromotionStrategy.ApplyPromotions(cartItems, promotions);
@@ -530,50 +253,21 @@ namespace PromotionEngine.Tests.PromotionStrategyTests
         [TestMethod]
         public void ApplyPromotion_Success_SinglePromotionWithMultipleCartItemQuantity()
         {
-            IPromotion promotion = new Promotion()
-            {
-                Active = true,
-                PromotionItems = new List<IPromotionItem>()
-                {
-                    new PromotionItem()
-                    {
-                        SKU = "C",
-                        Quantity = 1,
-                    },
-                    new PromotionItem()
-                    {
-                        SKU = "D",
-                        Quantity = 1,
+            IPromotionModel promotion = this.ValidMultipleItemPromotion();
 
-                    },
-                },
-                PromotionPrice = 30,
-                PromotionType = Enum.PromotionType.MultipleItems
-            };
-
-            List<ICartItemModel> cartItems = new List<ICartItemModel>()
+            List<ICartItemModel> cartItems = this.ValidCartItems().Select(x =>
             {
-                new CartItemModel()
+                if (x.SKU == "D")
                 {
-                    SKU = "C",
-                    Price = 20,
-                    PromotionApplied = false,
-                    Quantity = 1,
-                    TotalPrice = 20,
-                },
-                new CartItemModel()
-                {
-                    SKU = "D",
-                    Price = 15,
-                    PromotionApplied = false,
-                    Quantity = 2,
-                    TotalPrice = 15,
+                    x.Quantity = 2;
                 }
-            };
+
+                return x;
+            }).ToList();
 
             List<IPromotionModel> promotions = new List<IPromotionModel>()
             {
-                new PromotionModel(promotion)
+                promotion
             };
 
             List<ICartItemModel> processedItems = this.multipleItemPromotionStrategy.ApplyPromotions(cartItems, promotions);
@@ -585,50 +279,22 @@ namespace PromotionEngine.Tests.PromotionStrategyTests
         [TestMethod]
         public void ApplyPromotion_Success_SinglePromotionWithMultiplePromotionQuantity()
         {
-            IPromotion promotion = new Promotion()
+            IPromotionModel promotion = this.ValidMultipleItemPromotion();
+            promotion.PromotionItems = promotion.PromotionItems.Select(x =>
             {
-                Active = true,
-                PromotionItems = new List<IPromotionItem>()
+                if (x.SKU == "C")
                 {
-                    new PromotionItem()
-                    {
-                        SKU = "C",
-                        Quantity = 2,
-                    },
-                    new PromotionItem()
-                    {
-                        SKU = "D",
-                        Quantity = 1,
-
-                    },
-                },
-                PromotionPrice = 30,
-                PromotionType = Enum.PromotionType.MultipleItems
-            };
-
-            List<ICartItemModel> cartItems = new List<ICartItemModel>()
-            {
-                new CartItemModel()
-                {
-                    SKU = "C",
-                    Price = 20,
-                    PromotionApplied = false,
-                    Quantity = 1,
-                    TotalPrice = 20,
-                },
-                new CartItemModel()
-                {
-                    SKU = "D",
-                    Price = 15,
-                    PromotionApplied = false,
-                    Quantity = 1,
-                    TotalPrice = 15,
+                    x.Quantity = 2;
                 }
-            };
+
+                return x;
+            }).ToList();
+
+            List<ICartItemModel> cartItems = this.ValidCartItems();
 
             List<IPromotionModel> promotions = new List<IPromotionModel>()
             {
-                new PromotionModel(promotion)
+                promotion
             };
 
             List<ICartItemModel> processedItems = this.multipleItemPromotionStrategy.ApplyPromotions(cartItems, promotions);
@@ -641,176 +307,86 @@ namespace PromotionEngine.Tests.PromotionStrategyTests
         [TestMethod]
         public void ApplyPromotion_Success_PromotionAlreadyApplied()
         {
-            IPromotion promotion = new Promotion()
-            {
-                Active = true,
-                PromotionItems = new List<IPromotionItem>()
-                {
-                    new PromotionItem()
-                    {
-                        SKU = "C",
-                        Quantity = 1,
-                    },
-                    new PromotionItem()
-                    {
-                        SKU = "D",
-                        Quantity = 1,
+            IPromotionModel promotion = this.ValidMultipleItemPromotion();
 
-                    },
-                },
-                PromotionPrice = 30,
-                PromotionType = Enum.PromotionType.MultipleItems
-            };
-
-            List<ICartItemModel> cartItems = new List<ICartItemModel>()
+            List<ICartItemModel> cartItems = this.ValidCartItems().Select(x =>
             {
-                new CartItemModel()
-                {
-                    SKU = "C",
-                    Price = 20,
-                    PromotionApplied = true,
-                    Quantity = 1,
-                    TotalPrice = 20,
-                },
-                new CartItemModel()
-                {
-                    SKU = "D",
-                    Price = 15,
-                    PromotionApplied = false,
-                    Quantity = 1,
-                    TotalPrice = 15,
-                }
-            };
+                x.PromotionApplied = true;
+                return x;
+            }).ToList();
 
             List<IPromotionModel> promotions = new List<IPromotionModel>()
             {
-                new PromotionModel(promotion)
+                promotion
             };
 
             List<ICartItemModel> processedItems = this.multipleItemPromotionStrategy.ApplyPromotions(cartItems, promotions);
 
             Assert.AreEqual(20, processedItems.First(x => x.SKU == "C").TotalPrice);
             Assert.AreEqual(15, processedItems.First(x => x.SKU == "D").TotalPrice);
+
+            Assert.AreEqual(cartItems.Count, processedItems.Count);
         }
 
         [TestMethod]
-        public void ApplyPromotion_Success_ItemWithoutPromotion()
+        public void ApplyPromotion_Success_ItemsWithoutPromotion()
         {
-            IPromotion promotion = new Promotion()
-            {
-                Active = true,
-                PromotionItems = new List<IPromotionItem>()
-                {
-                    new PromotionItem()
-                    {
-                        SKU = "C",
-                        Quantity = 1,
-                    },
-                    new PromotionItem()
-                    {
-                        SKU = "D",
-                        Quantity = 1,
+            IPromotionModel promotion = this.ValidMultipleItemPromotion();
 
-                    },
-                },
-                PromotionPrice = 150,
-                PromotionType = Enum.PromotionType.MultipleItems
-            };
-
-            List<ICartItemModel> cartItems = new List<ICartItemModel>()
+            List<ICartItemModel> cartItems = this.ValidCartItems().Select(x =>
             {
-                new CartItemModel()
+                if (x.SKU == "C")
                 {
-                    SKU = "A",
-                    Price = 100,
-                    PromotionApplied = false,
-                    Quantity = 1,
-                    TotalPrice = 100,
-                },
-                new CartItemModel()
-                {
-                    SKU = "B",
-                    Price = 120,
-                    PromotionApplied = false,
-                    Quantity = 1,
-                    TotalPrice = 120,
+                    x.SKU = "A";
                 }
-            };
+
+                if (x.SKU == "D")
+                {
+                    x.SKU = "B";
+                }
+
+                return x;
+            }).ToList();
 
             List<IPromotionModel> promotions = new List<IPromotionModel>()
             {
-                new PromotionModel(promotion)
+                promotion
             };
 
             List<ICartItemModel> processedItems = this.multipleItemPromotionStrategy.ApplyPromotions(cartItems, promotions);
 
-            Assert.AreEqual(100, processedItems.First(x => x.SKU == "A").TotalPrice);
-            Assert.AreEqual(120, processedItems.First(x => x.SKU == "B").TotalPrice);
+            Assert.AreEqual(20, processedItems.First(x => x.SKU == "A").TotalPrice);
+            Assert.AreEqual(15, processedItems.First(x => x.SKU == "B").TotalPrice);
         }
 
         [TestMethod]
-        public void ApplyPromotion_Success_SinglePromotionAndItemsWithoutPromotion()
+        public void ApplyPromotion_Success_ItemsWithAndWithoutPromotion()
         {
-            IPromotion promotion = new Promotion()
-            {
-                Active = true,
-                PromotionItems = new List<IPromotionItem>()
-                {
-                    new PromotionItem()
-                    {
-                        SKU = "C",
-                        Quantity = 1,
-                    },
-                    new PromotionItem()
-                    {
-                        SKU = "D",
-                        Quantity = 1,
+            IPromotionModel promotion = this.ValidMultipleItemPromotion();
 
-                    },
-                },
-                PromotionPrice = 30,
-                PromotionType = Enum.PromotionType.MultipleItems
-            };
+            List<ICartItemModel> cartItems = this.ValidCartItems();
 
-            List<ICartItemModel> cartItems = new List<ICartItemModel>()
+            cartItems.Add(new CartItemModel()
             {
-                new CartItemModel()
-                {
-                    SKU = "C",
-                    Price = 20,
-                    PromotionApplied = false,
-                    Quantity = 1,
-                    TotalPrice = 20,
-                },
-                new CartItemModel()
-                {
-                    SKU = "D",
-                    Price = 15,
-                    PromotionApplied = false,
-                    Quantity = 1,
-                    TotalPrice = 15,
-                },
-                new CartItemModel()
-                {
-                    SKU = "A",
-                    Price = 100,
-                    PromotionApplied = false,
-                    Quantity = 1,
-                    TotalPrice = 100,
-                },
-                new CartItemModel()
-                {
-                    SKU = "B",
-                    Price = 100,
-                    PromotionApplied = false,
-                    Quantity = 1,
-                    TotalPrice = 120,
-                }
-            };
+                SKU = "A",
+                Price = 100,
+                PromotionApplied = false,
+                Quantity = 1,
+                TotalPrice = 100,
+            });
+
+            cartItems.Add(new CartItemModel()
+            {
+                SKU = "B",
+                Price = 100,
+                PromotionApplied = false,
+                Quantity = 1,
+                TotalPrice = 120,
+            });
 
             List<IPromotionModel> promotions = new List<IPromotionModel>()
             {
-                new PromotionModel(promotion)
+                promotion
             };
 
             List<ICartItemModel> processedItems = this.multipleItemPromotionStrategy.ApplyPromotions(cartItems, promotions);
@@ -822,5 +398,64 @@ namespace PromotionEngine.Tests.PromotionStrategyTests
         }
 
         #endregion Apply Promotion Tests
+
+        #region Private Methods
+
+        /// <summary>
+        /// A Valid promotion for tests.
+        /// </summary>
+        /// <returns>A valid promotion.</returns>
+        private IPromotionModel ValidMultipleItemPromotion()
+        {
+            return new PromotionModel(
+                new Promotion()
+                {
+                    Active = true,
+                    PromotionPrice = 30,
+                    PromotionItems = new List<IPromotionItem>()
+                    {
+                        new PromotionItem()
+                        {
+                            SKU = "C",
+                            Quantity = 1,
+                        },
+                        new PromotionItem()
+                        {
+                            SKU = "D",
+                            Quantity = 1,
+                        },
+                    },
+                    PromotionType = Enum.PromotionType.MultipleItems,
+                });
+        }
+
+        /// <summary>
+        /// A Valid collection of cart items.
+        /// </summary>
+        /// <returns>A valid collection of cart items.</returns>
+        private List<ICartItemModel> ValidCartItems()
+        {
+            return new List<ICartItemModel>()
+            {
+                new CartItemModel()
+                {
+                    SKU = "C",
+                    Price = 20,
+                    PromotionApplied = false,
+                    Quantity = 1,
+                    TotalPrice = 20,
+                },
+                new CartItemModel()
+                {
+                    SKU = "D",
+                    Price = 15,
+                    PromotionApplied = false,
+                    Quantity = 1,
+                    TotalPrice = 15,
+                }
+            };
+        }
+
+        #endregion Private Methods
     }
 }
