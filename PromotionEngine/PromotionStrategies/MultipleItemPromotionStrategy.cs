@@ -72,25 +72,15 @@ namespace PromotionEngine.PromotionStrategies
                             {
                                 logger.LogInformation($"Applying Promotion: {promotion.PromotionType}, {promotion.PromotionItems.Select(x=> x.SKU)}");
 
-                                // The first item found will have the promotion applied to it. 
-                                ICartItemModel firstPromotedItem = promotedItems.First();
-                                int firstPromotionItemQuantity = promotion.PromotionItems.First(x => x.SKU == firstPromotedItem.SKU).Quantity;
-
-                                // The tiotal price is the promotion price + the additional quantity.
-                                firstPromotedItem.TotalPrice = promotion.PromotionPrice + (firstPromotedItem.Price * (firstPromotedItem.Quantity - firstPromotionItemQuantity));
-                                firstPromotedItem.PromotionApplied = true;
-
-                                itemsWithPromotionApplied.Add(firstPromotedItem);
-
-                                // Calculate the price for the remaining items that are part of the promotion.
-                                foreach (ICartItemModel promotedItem in promotedItems.Where(x => x.SKU != firstPromotedItem.SKU))
+                                // Calculate the promotion that should be applied to the cart items.
+                                for (int i = 0; i < promotedItems.Count; i++)
                                 {
-                                    int promotionItemQuantity = promotion.PromotionItems.First(x => x.SKU == promotedItem.SKU).Quantity;
+                                    ICartItemModel promotedItem = promotedItems.ElementAt(i);
 
-                                    promotedItem.TotalPrice = promotedItem.Price * (promotedItem.Quantity - promotionItemQuantity);
-                                    promotedItem.PromotionApplied = true;
-
+                                    // The first element in the cart item is the ine that has the promotion price applied to it.
+                                    this.ApplyToCartItem(promotedItem, promotion, i == 0);
                                     itemsWithPromotionApplied.Add(promotedItem);
+
                                 }
                             }
                         }
@@ -146,6 +136,29 @@ namespace PromotionEngine.PromotionStrategies
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Applies the promotion item to the cart item.
+        /// </summary>
+        /// <param name="cartItem">The cartItem.</param>
+        /// <param name="promotion">The promotion.</param>
+        /// <param name="applyPromotionPrice">Whether to apply the promotion price to the cart item price.</param>
+        /// <returns>The updated cart item.</returns>
+        private ICartItemModel ApplyToCartItem(ICartItemModel cartItem, IPromotionModel promotion, bool applyPromotionPrice)
+        {
+            int promotionItemQuantity = promotion.PromotionItems.First(x => x.SKU == cartItem.SKU).Quantity;
+
+            cartItem.TotalPrice =  cartItem.Price * (cartItem.Quantity - promotionItemQuantity);
+
+            if (applyPromotionPrice)
+            {
+                cartItem.TotalPrice += promotion.PromotionPrice;
+            }
+
+            cartItem.PromotionApplied = true;
+
+            return cartItem;
         }
     }
 }
